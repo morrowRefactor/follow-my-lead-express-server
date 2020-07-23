@@ -1,6 +1,8 @@
 # Follow My Lead Express App
 
-This Express server supports CRUD operations for the React app Follow My Lead across multiple endpoints
+This Express server supports CRUD operations for the React app Follow My Lead across multiple endpoints.
+
+The live client app can be viewed here: https://follow-my-lead.vercel.app/
 
 ## Scripts
 
