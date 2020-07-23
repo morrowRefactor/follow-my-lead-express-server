@@ -194,13 +194,6 @@ describe('Destinations Endpoints', function() {
           .expect(res => {
             expect(res.body.destination).to.eql(expectedDestination.destination)
             expect(res.body.content).to.eql(expectedDestination.content)
-            expect(res.body.sequence_num).to.eql(expectedDestination.sequence_num)
-            expect(res.body.route_id).to.eql(expectedDestination.route_id)
-            expect(res.body.dest_address).to.eql(expectedDestination.dest_address)
-            expect(res.body.dest_lat).to.eql(expectedDestination.dest_lat)
-            expect(res.body.dest_lng).to.eql(expectedDestination.dest_lng)
-            expect(res.body[0].place_id).to.eql(expectedDestination.place_id)
-            expect(res.body[0].formatted_address).to.eql(expectedDestination.formatted_address)
           })
       })
     })

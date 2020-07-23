@@ -70,7 +70,7 @@ destinationsRouter
       .catch(next)
   })
   .get((req, res, next) => {
-    res.json(res.dest)
+    res.json(serializeDestinations(res.dest))
   })
   .delete((req, res, next) => {
     DestinationsService.deleteDestination(
