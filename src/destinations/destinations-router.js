@@ -1,10 +1,10 @@
-const express = require('express')
-const xss = require('xss')
-const path = require('path')
-const DestinationsService = require('./destinations-service')
+const express = require('express');
+const xss = require('xss');
+const path = require('path');
+const DestinationsService = require('./destinations-service');
 
-const destinationsRouter = express.Router()
-const jsonParser = express.json()
+const destinationsRouter = express.Router();
+const jsonParser = express.json();
 
 const serializeDestinations = dest => ({
   id: dest.id,
@@ -17,12 +17,12 @@ const serializeDestinations = dest => ({
   dest_lng: dest.dest_lng,
   place_id: dest.place_id,
   formatted_address: dest.formatted_address
-})
+});
 
 destinationsRouter
   .route('/')
   .get((req, res, next) => {
-    const knexInstance = req.app.get('db')
+    const knexInstance = req.app.get('db');
     DestinationsService.getAllDestinations(knexInstance)
       .then(dest => {
         res.json(dest.map(serializeDestinations))
@@ -30,14 +30,14 @@ destinationsRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address } = req.body
-    const newDest = { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address }
+    const { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address } = req.body;
+    const newDest = { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address };
 
     for (const [key, value] of Object.entries(newDest))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
-        })
+        });
     DestinationsService.insertDestinations(
       req.app.get('db'),
       newDest
@@ -49,7 +49,7 @@ destinationsRouter
           .json(serializeDestinations(dest))
       })
       .catch(next)
-  })
+  });
 
 destinationsRouter
   .route('/:dest_id')
@@ -83,17 +83,17 @@ destinationsRouter
       .catch(next)
   })
   .patch(jsonParser, (req, res, next) => {
-    const { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address } = req.body
-    const destToUpdate = { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address }
+    const { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address } = req.body;
+    const destToUpdate = { destination, sequence_num, content, route_id, dest_address, dest_lat, dest_lng, place_id, formatted_address };
 
-    const numberOfValues = Object.values(destToUpdate).filter(Boolean).length
-      if (numberOfValues === 0) {
+    const numberOfValues = Object.values(destToUpdate).filter(Boolean).length;
+    if (numberOfValues === 0) {
         return res.status(400).json({
         error: {
           message: `Request body must contain a destination, sequence number, and route ID`
         }
-      })
-    }
+      });
+    };
 
     DestinationsService.updateDestination(
         req.app.get('db'),
@@ -104,6 +104,6 @@ destinationsRouter
         res.status(204).end()
       })
       .catch(next)
-  })
+  });
 
-module.exports = destinationsRouter
+module.exports = destinationsRouter;

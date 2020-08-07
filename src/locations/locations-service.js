@@ -11,6 +11,6 @@ const LocationsService = {
                 return rows[0]
             })
     }
-}
+};
 
-module.exports = LocationsService
+module.exports = LocationsService;

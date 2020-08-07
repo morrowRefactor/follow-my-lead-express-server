@@ -22,7 +22,7 @@ function makeRoutesArray() {
         location_id: 1
       }
     ];
-}
+};
 
 function makeMaliciousRoute() {
   const maliciousRoute = {
@@ -31,21 +31,21 @@ function makeMaliciousRoute() {
     route_summ: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
     route_type_id: 1,
     location_id: 2
-  }
+  };
   const expectedRoute = {
     ...maliciousRoute,
     route_name: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
     route_summ: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
     route_type_id: 1,
     location_id: 2
-  }
+  };
   return {
     maliciousRoute,
     expectedRoute,
-  }
-}
+  };
+};
   
   module.exports = {
     makeRoutesArray,
     makeMaliciousRoute
-  }
+  };

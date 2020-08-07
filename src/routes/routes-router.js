@@ -1,10 +1,10 @@
-const express = require('express')
-const xss = require('xss')
-const path = require('path')
-const RoutesService = require('./routes-service')
+const express = require('express');
+const xss = require('xss');
+const path = require('path');
+const RoutesService = require('./routes-service');
 
-const routesRouter = express.Router()
-const jsonParser = express.json()
+const routesRouter = express.Router();
+const jsonParser = express.json();
 
 const serializeRoutes = route => ({
   id: route.id,
@@ -12,12 +12,12 @@ const serializeRoutes = route => ({
   route_summ: xss(route.route_summ),
   route_type_id: route.route_type_id,
   location_id: route.location_id
-})
+});
 
 routesRouter
   .route('/')
   .get((req, res, next) => {
-    const knexInstance = req.app.get('db')
+    const knexInstance = req.app.get('db');
     RoutesService.getAllRoutes(knexInstance)
       .then(routes => {
         res.json(routes.map(serializeRoutes))
@@ -25,14 +25,14 @@ routesRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { route_name, route_summ, route_type_id, location_id } = req.body
-    const newRoute = { route_name, route_summ, route_type_id, location_id }
+    const { route_name, route_summ, route_type_id, location_id } = req.body;
+    const newRoute = { route_name, route_summ, route_type_id, location_id };
 
     for (const [key, value] of Object.entries(newRoute))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
-        })
+        });
     RoutesService.insertRoute(
       req.app.get('db'),
       newRoute
@@ -44,7 +44,7 @@ routesRouter
           .json(serializeRoutes(route))
       })
       .catch(next)
-  })
+  });
 
 routesRouter
   .route('/:route_id')
@@ -57,9 +57,9 @@ routesRouter
         if (!route) {
           return res.status(404).json({
             error: { message: `Route doesn't exist` }
-          })
+          });
         }
-        res.route = route
+        res.route = route;
         next()
       })
       .catch(next)
@@ -78,8 +78,8 @@ routesRouter
       .catch(next)
   })
   .patch(jsonParser, (req, res, next) => {
-    const { route_name, route_summ, route_type_id, location_id } = req.body
-    const routeToUpdate = { route_name, route_summ, route_type_id, location_id }
+    const { route_name, route_summ, route_type_id, location_id } = req.body;
+    const routeToUpdate = { route_name, route_summ, route_type_id, location_id };
 
     const numberOfValues = Object.values(routeToUpdate).filter(Boolean).length
       if (numberOfValues === 0) {
@@ -87,7 +87,7 @@ routesRouter
         error: {
           message: `Request body must contain a route name, summary, route type, and location`
         }
-      })
+      });
     }
 
     RoutesService.updateRoute(
@@ -99,6 +99,6 @@ routesRouter
         res.status(204).end()
       })
       .catch(next)
-  })
+  });
 
-module.exports = routesRouter
+module.exports = routesRouter;

@@ -1,27 +1,27 @@
-const knex = require('knex')
-const app = require('../src/app')
-const { makeRoutesArray, makeMaliciousRoute } = require('./routes.fixtures')
-const { makeRouteTypesArray } = require('./routeTypes.fixtures')
-const { makeLocationsArray } = require('./locations.fixtures')
+const knex = require('knex');
+const app = require('../src/app');
+const { makeRoutesArray, makeMaliciousRoute } = require('./routes.fixtures');
+const { makeRouteTypesArray } = require('./routeTypes.fixtures');
+const { makeLocationsArray } = require('./locations.fixtures');
 
 describe('Routes Endpoints', function() {
-  let db
+  let db;
 
   before('make knex instance', () => {
 
     db = knex({
       client: 'pg',
       connection: process.env.TEST_DATABASE_URL,
-    })
-    app.set('db', db)
+    });
+    app.set('db', db);
 
-  })
+  });
 
-  after('disconnect from db', () => db.destroy())
+  after('disconnect from db', () => db.destroy());
 
-  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
-  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
   describe(`GET /api/routes`, () => {
     context(`Given no routes`, () => {
@@ -29,8 +29,8 @@ describe('Routes Endpoints', function() {
         return supertest(app)
           .get('/api/routes')
           .expect(200, [])
-      })
-    })
+      });
+    });
 
     context('Given there are routes in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -51,19 +51,19 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert(testRoutes)
           })
-      })
+      });
 
       it('responds with 200 and all of the routes', () => {
         return supertest(app)
           .get('/api/routes')
           .expect(200, testRoutes)
-      })
-    })
+      });
+    });
 
     context(`Given an XSS attack routes`, () => {
       const testRouteTypes = makeRouteTypesArray();
       const testLocations = makeLocationsArray();
-      const { maliciousRoute, expectedRoute } = makeMaliciousRoute()
+      const { maliciousRoute, expectedRoute } = makeMaliciousRoute();
 
       beforeEach('insert malicious route', () => {
         return db
@@ -79,7 +79,7 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert([ maliciousRoute ])
           })
-      })
+      });
 
       it('removes XSS attack content', () => {
         return supertest(app)
@@ -89,9 +89,9 @@ describe('Routes Endpoints', function() {
             expect(res.body[0].route_name).to.eql(expectedRoute.route_name)
             expect(res.body[0].route_summ).to.eql(expectedRoute.route_summ)
           })
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`GET /api/routes/:route_id`, () => {
     context(`Given no routes`, () => {
@@ -100,13 +100,13 @@ describe('Routes Endpoints', function() {
         return supertest(app)
           .get(`/api/routes/${routeId}`)
           .expect(404, { error: { message: `Route doesn't exist` } })
-      })
-    })
+      });
+    });
 
     context('Given there are routes in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
       const testLocations = makeLocationsArray();
-      const testRoutes = makeRoutesArray()
+      const testRoutes = makeRoutesArray();
 
       beforeEach('insert routes', () => {
         return db
@@ -122,7 +122,7 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert(testRoutes)
           })
-      })
+      });
 
       it('responds with 200 and the specified route', () => {
         const routeId = 2
@@ -130,13 +130,13 @@ describe('Routes Endpoints', function() {
         return supertest(app)
           .get(`/api/routes/${routeId}`)
           .expect(200, expectedRoute)
-      })
-    })
+      });
+    });
 
     context(`Given an XSS attack content`, () => {
       const testRouteTypes = makeRouteTypesArray();
       const testLocations = makeLocationsArray();
-      const { maliciousRoute, expectedRoute } = makeMaliciousRoute()
+      const { maliciousRoute, expectedRoute } = makeMaliciousRoute();
 
       beforeEach('insert malicious route', () => {
         return db
@@ -152,7 +152,7 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert([ maliciousRoute ])
           })
-      })
+      });
 
       it('removes XSS attack content', () => {
         return supertest(app)
@@ -162,9 +162,9 @@ describe('Routes Endpoints', function() {
             expect(res.body.route_name).to.eql(expectedRoute.route_name)
             expect(res.body.route_summ).to.eql(expectedRoute.route_summ)
           })
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`POST /api/routes`, () => {
     const testRouteTypes = makeRouteTypesArray();
@@ -179,7 +179,7 @@ describe('Routes Endpoints', function() {
                 .into('locations')
                 .insert(testLocations)
         })
-    })
+    });
 
     it(`creates a route, responding with 201 and the new route`, () => {
       const newRoute = {
@@ -187,7 +187,7 @@ describe('Routes Endpoints', function() {
         route_summ: 'Test new nroute content...',
         route_type_id: 2,
         location_id: 1
-      }
+      };
       return supertest(app)
         .post('/api/routes')
         .send(newRoute)
@@ -205,9 +205,9 @@ describe('Routes Endpoints', function() {
             .get(`/api/routes/${res.body.id}`)
             .expect(res.body)
         )
-    })
+    });
 
-    const requiredFields = ['route_name', 'route_summ', 'route_type_id', 'location_id']
+    const requiredFields = ['route_name', 'route_summ', 'route_type_id', 'location_id'];
 
     requiredFields.forEach(field => {
         const newRoute = {
@@ -215,7 +215,7 @@ describe('Routes Endpoints', function() {
             route_summ: 'Test new nroute content...',
             route_type_id: 2,
             location_id: 1
-        }
+        };
 
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
         delete newRoute[field]
@@ -226,11 +226,11 @@ describe('Routes Endpoints', function() {
           .expect(400, {
             error: { message: `Missing '${field}' in request body` }
           })
-      })
-    })
+      });
+    });
 
     it('removes XSS attack content from response', () => {
-      const { maliciousRoute, expectedRoute } = makeMaliciousRoute()
+      const { maliciousRoute, expectedRoute } = makeMaliciousRoute();
       return supertest(app)
         .post(`/api/routes`)
         .send(maliciousRoute)
@@ -241,8 +241,8 @@ describe('Routes Endpoints', function() {
           expect(res.body.route_type_id).to.eql(expectedRoute.route_type_id)
           expect(res.body.location_id).to.eql(expectedRoute.location_id)
         })
-    })
-  })
+    });
+  });
 
   describe(`DELETE /api/routes/:route_id`, () => {
     context(`Given no routes`, () => {
@@ -251,8 +251,8 @@ describe('Routes Endpoints', function() {
         return supertest(app)
           .delete(`/api/routes/${routeId}`)
           .expect(404, { error: { message: `Route doesn't exist` } })
-      })
-    })
+      });
+    });
 
     context('Given there are routes in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -273,7 +273,7 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert(testRoutes)
           })
-      })
+      });
 
       it('responds with 204 and removes the route', () => {
         const idToRemove = 2
@@ -286,9 +286,9 @@ describe('Routes Endpoints', function() {
               .get(`/api/routes`)
               .expect(expectedRoutes)
           )
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`PATCH /api/routes/:route_id`, () => {
     context(`Given no notes`, () => {
@@ -297,8 +297,8 @@ describe('Routes Endpoints', function() {
         return supertest(app)
           .delete(`/api/routes/${routeId}`)
           .expect(404, { error: { message: `Route doesn't exist` } })
-      })
-    })
+      });
+    });
 
     context('Given there are routes in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -319,20 +319,20 @@ describe('Routes Endpoints', function() {
               .into('routes')
               .insert(testRoutes)
           })
-      })
+      });
 
       it('responds with 204 and updates the route', () => {
-        const idToUpdate = 2
+        const idToUpdate = 2;
         const updateRoute = {
           route_name: 'updated route title',
           route_summ: 'updated route summary',
           route_type_id: 1,
           location_id: 1
-        }
+        };
         const expectedRoute = {
           ...testRoutes[idToUpdate - 1],
           ...updateRoute
-        }
+        };
         return supertest(app)
           .patch(`/api/routes/${idToUpdate}`)
           .send(updateRoute)
@@ -342,10 +342,10 @@ describe('Routes Endpoints', function() {
               .get(`/api/routes/${idToUpdate}`)
               .expect(expectedRoute)
           )
-      })
+      });
 
       it(`responds with 400 when no required fields supplied`, () => {
-        const idToUpdate = 2
+        const idToUpdate = 2;
         return supertest(app)
           .patch(`/api/routes/${idToUpdate}`)
           .send({ irrelevantField: 'foo' })
@@ -354,17 +354,17 @@ describe('Routes Endpoints', function() {
               message: `Request body must contain a route name, summary, route type, and location`
             }
           })
-      })
+      });
 
       it(`responds with 204 when updating only a subset of fields`, () => {
-        const idToUpdate = 2
+        const idToUpdate = 2;
         const updateRoute = {
           route_name: 'updated route title',
-        }
+        };
         const expectedRoute = {
           ...testRoutes[idToUpdate - 1],
           ...updateRoute
-        }
+        };
 
         return supertest(app)
           .patch(`/api/routes/${idToUpdate}`)
@@ -378,7 +378,7 @@ describe('Routes Endpoints', function() {
               .get(`/api/routes/${idToUpdate}`)
               .expect(expectedRoute)
           )
-      })
-    })
-    })
-})
+      });
+    });
+    });
+});

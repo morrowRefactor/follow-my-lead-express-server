@@ -15,7 +15,7 @@ function makeLocationsArray() {
         unique_loc: 'Dublin-Leinster-Ireland'
       }
     ];
-}
+};
 
 function makeMaliciousLocation() {
     const maliciousLocation = {
@@ -24,21 +24,21 @@ function makeMaliciousLocation() {
       state_province: 'Naughty naughty very naughty <script>alert("xss");</script>',
       country: 'Naughty naughty very naughty <script>alert("xss");</script>',
       unique_loc: 'Naughty naughty very naughty <script>alert("xss");</script>'
-    }
+    };
     const expectedLocation = {
       ...maliciousLocation,
       city: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
       state_province: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
       country: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
       unique_loc: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;'
-    }
+    };
     return {
       maliciousLocation,
       expectedLocation,
-    }
-  }
+    };
+  };
   
   module.exports = {
     makeLocationsArray,
     makeMaliciousLocation
-  }
+  };

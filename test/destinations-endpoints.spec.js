@@ -1,29 +1,29 @@
-const knex = require('knex')
-const app = require('../src/app')
-const { makeDestinationsArray, makeMaliciousDestination } = require('./destinations.fixtures')
-const { makeRoutesArray } = require('./routes.fixtures')
-const { makeRouteTypesArray } = require('./routeTypes.fixtures')
-const { makeLocationsArray } = require('./locations.fixtures')
-const routeTypesFixtures = require('./routeTypes.fixtures')
+const knex = require('knex');
+const app = require('../src/app');
+const { makeDestinationsArray, makeMaliciousDestination } = require('./destinations.fixtures');
+const { makeRoutesArray } = require('./routes.fixtures');
+const { makeRouteTypesArray } = require('./routeTypes.fixtures');
+const { makeLocationsArray } = require('./locations.fixtures');
+const routeTypesFixtures = require('./routeTypes.fixtures');
 
 describe('Destinations Endpoints', function() {
-  let db
+  let db;
 
   before('make knex instance', () => {
 
     db = knex({
       client: 'pg',
       connection: process.env.TEST_DATABASE_URL,
-    })
-    app.set('db', db)
+    });
+    app.set('db', db);
 
   })
 
-  after('disconnect from db', () => db.destroy())
+  after('disconnect from db', () => db.destroy());
 
-  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
-  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
   describe(`GET /api/destinations`, () => {
     context(`Given no destinations`, () => {
@@ -32,7 +32,7 @@ describe('Destinations Endpoints', function() {
           .get('/api/destinations')
           .expect(200, [])
       })
-    })
+    });
 
     context('Given there are destinations in the database', () => {
       const testDestinations = makeDestinationsArray();
@@ -59,20 +59,20 @@ describe('Destinations Endpoints', function() {
               .into('destinations')
               .insert(testDestinations)
           })
-      })
+      });
 
       it('responds with 200 and all of the destinations', () => {
         return supertest(app)
           .get('/api/destinations')
           .expect(200, testDestinations)
-      })
-    })
+      });
+    });
 
     context(`Given an XSS attack destination`, () => {
       const testRouteTypes = makeRouteTypesArray();
       const testLocations = makeLocationsArray();
       const testRoutes = makeRoutesArray();
-      const { maliciousDestination, expectedDestination } = makeMaliciousDestination()
+      const { maliciousDestination, expectedDestination } = makeMaliciousDestination();
 
       beforeEach('insert malicious destination', () => {
         return db
@@ -93,7 +93,7 @@ describe('Destinations Endpoints', function() {
               .into('destinations')
               .insert([ maliciousDestination ])
           })
-      })
+      });
 
       it('removes XSS attack content', () => {
         return supertest(app)
@@ -110,19 +110,19 @@ describe('Destinations Endpoints', function() {
             expect(res.body[0].place_id).to.eql(expectedDestination.place_id)
             expect(res.body[0].formatted_address).to.eql(expectedDestination.formatted_address)
           })
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`GET /api/destinations/:dest_id`, () => {
     context(`Given no destinations`, () => {
       it(`responds with 404`, () => {
-        const destId = 123456
+        const destId = 123456;
         return supertest(app)
           .get(`/api/destinations/${destId}`)
           .expect(404, { error: { message: `Destination doesn't exist` } })
-      })
-    })
+      });
+    });
 
     context('Given there are destinations in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -149,7 +149,7 @@ describe('Destinations Endpoints', function() {
               .into('destinations')
               .insert(testDestinations)
           })
-      })
+      });
 
       it('responds with 200 and the specified destination', () => {
         const destId = 2
@@ -157,8 +157,8 @@ describe('Destinations Endpoints', function() {
         return supertest(app)
           .get(`/api/destinations/${destId}`)
           .expect(200, expectedDestination)
-      })
-    })
+      });
+    });
 
     context(`Given an XSS attack content`, () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -185,7 +185,7 @@ describe('Destinations Endpoints', function() {
               .into('destinations')
               .insert([ maliciousDestination ])
           })
-      })
+      });
 
       it('removes XSS attack content', () => {
         return supertest(app)
@@ -195,9 +195,9 @@ describe('Destinations Endpoints', function() {
             expect(res.body.destination).to.eql(expectedDestination.destination)
             expect(res.body.content).to.eql(expectedDestination.content)
           })
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`POST /api/destinations`, () => {
     const testRouteTypes = makeRouteTypesArray();
@@ -218,7 +218,7 @@ describe('Destinations Endpoints', function() {
                 .into('routes')
                 .insert(testRoutes)
         })
-    })
+    });
 
     it(`creates a destination, responding with 201 and the new destination`, () => {
       const newDestination = {
@@ -231,7 +231,7 @@ describe('Destinations Endpoints', function() {
         dest_lng: '-73.985428',
         place_id: 'ChIJv4JR1wPLj4ARxtzdGT8UiXs',
         formatted_address: '20 W 34th St'
-      }
+      };
       return supertest(app)
         .post('/api/destinations')
         .send(newDestination)
@@ -254,9 +254,9 @@ describe('Destinations Endpoints', function() {
             .get(`/api/destinations/${res.body.id}`)
             .expect(res.body)
         )
-    })
+    });
 
-    const requiredFields = ['destination', 'content', 'sequence_num', 'route_id', 'dest_address', 'dest_lat', 'dest_lng']
+    const requiredFields = ['destination', 'content', 'sequence_num', 'route_id', 'dest_address', 'dest_lat', 'dest_lng'];
 
     requiredFields.forEach(field => {
         const newDestination = {
@@ -269,7 +269,7 @@ describe('Destinations Endpoints', function() {
             dest_lng: -73.985428,
             place_id: 'ChIJv4JR1wPLj4ARxtzdGT8UiXs',
             formatted_address: '20 W 34th St'
-        }
+        };
 
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
         delete newDestination[field]
@@ -280,8 +280,8 @@ describe('Destinations Endpoints', function() {
           .expect(400, {
             error: { message: `Missing '${field}' in request body` }
           })
-      })
-    })
+      });
+    });
 
     it('removes XSS attack content from response', () => {
       const { maliciousDestination, expectedDestination } = makeMaliciousDestination();
@@ -300,8 +300,8 @@ describe('Destinations Endpoints', function() {
             expect(res.body.place_id).to.eql(expectedDestination.place_id)
             expect(res.body.formatted_address).to.eql(expectedDestination.formatted_address)
         })
-    })
-  })
+    });
+  });
 
   describe(`DELETE /api/destinations/:dest_id`, () => {
     context(`Given no destinations`, () => {
@@ -311,7 +311,7 @@ describe('Destinations Endpoints', function() {
           .delete(`/api/destinations/${destId}`)
           .expect(404, { error: { message: `Destination doesn't exist` } })
       })
-    })
+    });
 
     context('Given there are destinations in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -338,7 +338,7 @@ describe('Destinations Endpoints', function() {
                 .into('destinations')
                 .insert(testDestinations)
           })
-      })
+      });
 
       it('responds with 204 and removes the destination', () => {
         const idToRemove = 2
@@ -351,9 +351,9 @@ describe('Destinations Endpoints', function() {
               .get(`/api/destinations`)
               .expect(expectedDestination)
           )
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`PATCH /api/destinations/:dest_id`, () => {
     context(`Given no destinations`, () => {
@@ -363,7 +363,7 @@ describe('Destinations Endpoints', function() {
           .delete(`/api/destinations/${destId}`)
           .expect(404, { error: { message: `Destination doesn't exist` } })
       })
-    })
+    });
 
     context('Given there are destinations in the database', () => {
       const testRouteTypes = makeRouteTypesArray();
@@ -390,10 +390,10 @@ describe('Destinations Endpoints', function() {
                 .into('destinations')
                 .insert(testDestinations)
           })
-      })
+      });
 
       it('responds with 204 and updates the destination', () => {
-        const idToUpdate = 2
+        const idToUpdate = 2;
         const updateDestination = {
           destination: 'updated destination title',
           content: 'updated destination summary',
@@ -404,11 +404,11 @@ describe('Destinations Endpoints', function() {
           dest_lng: '-121.9844785',
           place_id: 'ChIJv4JR1wPLj4ARxtzdGT8UiXs',
           formatted_address: '2151 Dustin Way'
-        }
+        };
         const expectedDestination = {
           ...testDestinations[idToUpdate - 1],
           ...updateDestination
-        }
+        };
         return supertest(app)
           .patch(`/api/destinations/${idToUpdate}`)
           .send(updateDestination)
@@ -418,7 +418,7 @@ describe('Destinations Endpoints', function() {
               .get(`/api/destinations/${idToUpdate}`)
               .expect(expectedDestination)
           )
-      })
+      });
 
       it(`responds with 400 when no required fields supplied`, () => {
         const idToUpdate = 2
@@ -430,17 +430,17 @@ describe('Destinations Endpoints', function() {
               message: `Request body must contain a destination, sequence number, and route ID`
             }
           })
-      })
+      });
 
       it(`responds with 204 when updating only a subset of fields`, () => {
-        const idToUpdate = 2
+        const idToUpdate = 2;
         const updateDestination = {
           destination: 'updated destination title',
-        }
+        };
         const expectedDestination = {
           ...testDestinations[idToUpdate - 1],
           ...updateDestination
-        }
+        };
 
         return supertest(app)
           .patch(`/api/destinations/${idToUpdate}`)
@@ -454,7 +454,7 @@ describe('Destinations Endpoints', function() {
               .get(`/api/destinations/${idToUpdate}`)
               .expect(expectedDestination)
           )
-      })
-    })
-    })
-})
+      });
+    });
+    });
+});

@@ -1,23 +1,23 @@
-const knex = require('knex')
-const app = require('../src/app')
-const { makeLocationsArray, makeMaliciousLocation } = require('./locations.fixtures')
+const knex = require('knex');
+const app = require('../src/app');
+const { makeLocationsArray, makeMaliciousLocation } = require('./locations.fixtures');
 
 describe('Locations Endpoints', function() {
-  let db
+  let db;
 
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
       connection: process.env.TEST_DATABASE_URL,
-    })
-    app.set('db', db)
-  })
+    });
+    app.set('db', db);
+  });
 
-  after('disconnect from db', () => db.destroy())
+  after('disconnect from db', () => db.destroy());
 
-  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  before('clean the table', () => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
-  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'))
+  afterEach('cleanup',() => db.raw('TRUNCATE route_type, locations, routes, destinations RESTART IDENTITY CASCADE'));
 
   describe(`GET /api/locations`, () => {
     context(`Given no locations`, () => {
@@ -25,8 +25,8 @@ describe('Locations Endpoints', function() {
         return supertest(app)
           .get('/api/locations')
           .expect(200, [])
-      })
-    })
+      });
+    });
 
     context('Given there are locations in the database', () => {
       const testLocations = makeLocationsArray();
@@ -35,24 +35,24 @@ describe('Locations Endpoints', function() {
         return db
           .into('locations')
           .insert(testLocations)
-      })
+      });
 
       it('responds with 200 and all of the locations', () => {
         return supertest(app)
           .get('/api/locations')
           .expect(200, testLocations)
-      })
-    })
+      });
+    });
 
     context(`Given an XSS attack locations`, () => {
       const testLocations = makeLocationsArray();
-      const { maliciousLocation, expectedLocation } = makeMaliciousLocation()
+      const { maliciousLocation, expectedLocation } = makeMaliciousLocation();
 
       beforeEach('insert malicious location', () => {
         return db
           .into('locations')
           .insert(maliciousLocation)
-      })
+      });
 
       it('removes XSS attack content', () => {
         return supertest(app)
@@ -64,9 +64,9 @@ describe('Locations Endpoints', function() {
             expect(res.body[0].country).to.eql(expectedLocation.country)
             expect(res.body[0].unique_loc).to.eql(expectedLocation.unique_loc)
           })
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe(`POST /api/locations`, () => {
     it(`creates a location, responding with 201 and the new location`, () => {
@@ -75,7 +75,7 @@ describe('Locations Endpoints', function() {
         state_province: 'California',
         country: 'United States',
         unique_loc: 'San-Jose-California-United-States'
-      }
+      };
       return supertest(app)
         .post('/api/locations')
         .send(newLocation)
@@ -93,9 +93,9 @@ describe('Locations Endpoints', function() {
             .get(`/api/locations/${res.body.id}`)
             
         )
-    })
+    });
 
-    const requiredFields = ['city', 'state_province', 'country', 'unique_loc']
+    const requiredFields = ['city', 'state_province', 'country', 'unique_loc'];
 
     requiredFields.forEach(field => {
         const newLocation = {
@@ -103,7 +103,7 @@ describe('Locations Endpoints', function() {
             state_province: 'Test new location content...',
             country: 'Test new location country',
             unique_loc: 'Test-Location-Unique-Loc'
-        }
+        };
 
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
         delete newLocation[field]
@@ -114,8 +114,8 @@ describe('Locations Endpoints', function() {
           .expect(400, {
             error: { message: `Missing '${field}' in request body` }
           })
-      })
-    })
+      });
+    });
 
     it('removes XSS attack content from response', () => {
       const { maliciousLocation, expectedLocation } = makeMaliciousLocation()
@@ -129,6 +129,6 @@ describe('Locations Endpoints', function() {
           expect(res.body.country).to.eql(expectedLocation.country)
           expect(res.body.unique_loc).to.eql(expectedLocation.unique_loc)
         })
-    })
-  })
-})
+    });
+  });
+});

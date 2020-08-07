@@ -145,7 +145,7 @@ function makeDestinationsArray() {
         formatted_address: '2151 Dustin Way'
       },
     ];
-}
+};
 
 function makeMaliciousDestination() {
   const maliciousDestination = {
@@ -159,7 +159,7 @@ function makeMaliciousDestination() {
     dest_lng: '-73.985428',
     place_id: 'ChIJv4JR1wPLj4ARxtzdGT8UiXs',
     formatted_address: '20 W 34th St'
-  }
+  };
   const expectedDestination = {
     ...maliciousDestination,
     destination: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
@@ -171,14 +171,14 @@ function makeMaliciousDestination() {
     dest_lng: '-73.985428',
     place_id: 'ChIJv4JR1wPLj4ARxtzdGT8UiXs',
     formatted_address: '20 W 34th St'
-  }
+  };
   return {
     maliciousDestination,
     expectedDestination,
-  }
-}
+  };
+};
   
   module.exports = {
     makeDestinationsArray,
     makeMaliciousDestination
-  }
+  };

@@ -24,6 +24,6 @@ const DestinationsService = {
             .where({ id })
             .update(newDestinationFields)
     },
-}
+};
 
-module.exports = DestinationsService
+module.exports = DestinationsService;

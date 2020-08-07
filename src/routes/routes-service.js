@@ -24,6 +24,6 @@ const RoutesService = {
             .where({ id })
             .update(newRouteFields)
     },
-}
+};
 
-module.exports = RoutesService
+module.exports = RoutesService;
