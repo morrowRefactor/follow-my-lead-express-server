@@ -20,6 +20,7 @@ Follow Routes: Users can select a route and follow each destination in sequence 
 Creating Routes: User can add their own routes by creating a unique route and adding destinations.
 
 ![screenshotDescription](https://user-images.githubusercontent.com/58446465/88344176-e178cc00-ccf7-11ea-92a7-2865ca850151.png)
+
 ![screenshotDescription](https://user-images.githubusercontent.com/58446465/88344179-e3db2600-ccf7-11ea-978d-88432ae8f254.png)
 
 ## Technology
@@ -40,47 +41,26 @@ Deployed via Heroku
 ## Open Endpoints
 All endpoints are open, no authentication required.
 
-[Route Types](documentation/route-types.md): `GET /api/route-types`
-[Locations](documentaion/locations.md): `GET /api/locations`
-[Show Routes](documents/routes.md): `GET /api/routes`
+[Route Types](documentation/route-types.md): `GET /api/route-types`  
+[Locations](documentation/locations.md): `GET /api/locations`  
+[Show Routes](documentation/routes.md): `GET /api/routes`  
 [Show Destinations](documentation/destinations.md): `GET /api/destinations`
 
 ### Add Content
 
-[Add Location](documentaion/locations.md): `POST /api/locations`
-[Add Route](documents/routes.md): `POST /api/routes`
+[Add Location](documentation/locations.md): `POST /api/locations`  
+[Add Route](documentation/routes.md): `POST /api/routes`  
 [Add Destination](documentation/destinations.md): `POST /api/destination`
 
 ### Edit Content
 
-[Edit Route](documents/routes.md): `PATCH /api/routes/route_id`
+[Edit Route](documentation/routes.md): `PATCH /api/routes/route_id`  
 [Edit Destination](documentation/destinations.md): `PATCH /api/destinations/dest_id`
 
 ### Remove Content
 
-[Remove Route](documents/routes.md): `DELETE /api/routes/route_id`
+[Remove Route](documentation/routes.md): `DELETE /api/routes/route_id`  
 [Remove Destination](documentation/destinations.md): `DELETE /api/destinations/dest_id`
-
-### Locations
-Get the full list of locations associated with active routes.
-
-**URL**: `/api/locations`
-
-**Method**: `GET`
-
-#### Success Response
-**Code**: `200 OK`
-**Example**:
-```json
-{
-  "id": 1,
-  "city": "Santa Cruz",
-  "state_province": "California",
-  "country": "United States",
-  "unique_loc": "Santa-Cruz-California-United-States"
-}
-```
-
 
 ## Scripts 
 

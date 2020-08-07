@@ -4,13 +4,12 @@ Destinations are associated to a route and contain location info unique to each 
 
 ## GET All Destinations
 
-**URL**: `/api/destinations`
-
+**URL**: `/api/destinations`  
 **Method**: `GET`
 
 #### Success Response
-**Code**: `200 OK`
-**Response Example**:
+**Code**: `200 OK`  
+**Response Example**:  
 ```json
 {
   "id": 1,
@@ -28,8 +27,7 @@ Destinations are associated to a route and contain location info unique to each 
 
 ## Add New Destination
 
-**URL**: `/api/destinations`
-
+**URL**: `/api/destinations`  
 **Method**: `POST`
 
 **Data Example**
@@ -49,7 +47,7 @@ Provide a destination name, content, sequence number, associated route ID, desti
 }
 ```
 
-**Response Example**:
+**Response Example**:  
 **Code**: `201 CREATED`
 
 ```json
@@ -69,8 +67,7 @@ Provide a destination name, content, sequence number, associated route ID, desti
 
 ## Edit Existing Destination
 
-**URL**: `/api/destinations/dest_id`
-
+**URL**: `/api/destinations/dest_id`  
 **Method**: `PATCH`
 
 **Data Example**
@@ -91,7 +88,7 @@ Provide a destination ID, name, content, sequence number, associated route ID, d
 }
 ```
 
-**Response Example**:
+**Response Example**:  
 **Code**: `200 OK`
 
 ```json
@@ -111,15 +108,12 @@ Provide a destination ID, name, content, sequence number, associated route ID, d
 
 ## Delete Existing Destination
 
-**URL**: `/api/destinations/dest_id`
-
-**URL Parameters**: `dest_id=[integer]` where `dest_id` is the ID of the destination in the database.
-
-**Method**: `DELETE`
-
+**URL**: `/api/destinations/dest_id`  
+**URL Parameters**: `dest_id=[integer]` where `dest_id` is the ID of the destination in the database.  
+**Method**: `DELETE`  
 **Data**: `{}`
 
-**Response Example**:
-**Code**: `204 No Content`
+**Response Example**:  
+**Code**: `204 No Content`  
 **Content** `{}`
 

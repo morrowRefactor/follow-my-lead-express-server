@@ -4,13 +4,12 @@ Routes are tied to a location and contain mutliple destinations for users to fol
 
 ## GET All Routes
 
-**URL**: `/api/routes`
-
+**URL**: `/api/routes`  
 **Method**: `GET`
 
 #### Success Response
-**Code**: `200 OK`
-**Response Example**:
+**Code**: `200 OK`  
+**Response Example**:  
 ```json
 {
   "id": 1,
@@ -23,11 +22,10 @@ Routes are tied to a location and contain mutliple destinations for users to fol
 
 ## Add New Route
 
-**URL**: `/api/routes`
-
+**URL**: `/api/routes`  
 **Method**: `POST`
 
-**Data Example**
+**Data Example**  
 Provide a route name, route summary, route type ID, and location ID.
 
 ```json
@@ -39,7 +37,7 @@ Provide a route name, route summary, route type ID, and location ID.
 }
 ```
 
-**Response Example**:
+**Response Example**:  
 **Code**: `201 CREATED`
 
 ```json
@@ -54,11 +52,10 @@ Provide a route name, route summary, route type ID, and location ID.
 
 ## Edit Existing Route
 
-**URL**: `/api/routes/route_id`
-
+**URL**: `/api/routes/route_id`  
 **Method**: `PATCH`
 
-**Data Example**
+**Data Example**  
 Provide a route ID, route name, route summary, route type ID, and location ID.
 
 ```json
@@ -71,7 +68,7 @@ Provide a route ID, route name, route summary, route type ID, and location ID.
 }
 ```
 
-**Response Example**:
+**Response Example**:  
 **Code**: `200 OK`
 
 ```json
@@ -86,15 +83,12 @@ Provide a route ID, route name, route summary, route type ID, and location ID.
 
 ## Delete Existing Route
 
-**URL**: `/api/routes/route_id`
-
-**URL Parameters**: `route_id=[integer]` where `route_id` is the ID of the route in the database.
-
-**Method**: `DELETE`
-
+**URL**: `/api/routes/route_id`  
+**URL Parameters**: `route_id=[integer]` where `route_id` is the ID of the route in the database.  
+**Method**: `DELETE`  
 **Data**: `{}`
 
-**Response Example**:
-**Code**: `204 No Content`
+**Response Example**:  
+**Code**: `204 No Content`  
 **Content** `{}`
 

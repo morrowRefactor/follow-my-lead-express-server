@@ -4,13 +4,12 @@ Unique locations, each associated with a route.
 
 ## GET All Locations
 
-**URL**: `/api/locations`
-
+**URL**: `/api/locations`  
 **Method**: `GET`
 
 #### Success Response
-**Code**: `200 OK`
-**Response Example**:
+**Code**: `200 OK`  
+**Response Example**:  
 ```json
 {
   "id": 1,
@@ -23,11 +22,10 @@ Unique locations, each associated with a route.
 
 ## Add New Location
 
-**URL**: `/api/locations`
-
+**URL**: `/api/locations`  
 **Method**: `POST`
 
-**Data Example**
+**Data Example**  
 Provide a city, state/province, country, and unique location string.
 
 ```json
@@ -39,7 +37,7 @@ Provide a city, state/province, country, and unique location string.
 }
 ```
 
-**Response Example**:
+**Response Example**:  
 **Code**: `201 CREATED`
 
 ```json
