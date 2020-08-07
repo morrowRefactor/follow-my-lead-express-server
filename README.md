@@ -37,6 +37,28 @@ Creating Routes: User can add their own routes by creating a unique route and ad
 
 Deployed via Heroku
 
+## Open Endpoints
+All endpoints are open, no authentication required.
+
+#### Locations
+Get the full list of locations associated with active routes.
+
+**URL**: `/api/locations`
+**Method**: `GET`
+
+### Success Response
+**Code**: `200 OK`
+**Example**
+```json
+{
+  "id": 1,
+  "city": "Santa Cruz",
+  "state_province": "California",
+  "country": "United States",
+  "unique_loc": "Santa-Cruz-California-United-States"
+}
+```
+
 ## Scripts 
 
 Start the application `npm start`
