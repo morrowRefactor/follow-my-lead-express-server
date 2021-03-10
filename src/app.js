@@ -26,12 +26,12 @@ app.use('/api/destinations', destinationsRouter);
 
 
 app.get('/', (req, res) => {
-  res.send('Hello, World! v2')
+  res.send('Hello, World!')
 });
 
 app.use(function errorHandler(error, req, res, next) {
    let response
-   if (NODE_ENV === 'test') {
+   if (NODE_ENV === 'production') {
    response = { error: { message: 'server error' } }
      } else {
      console.error(error)
