@@ -26,7 +26,7 @@ app.use('/api/destinations', destinationsRouter);
 
 
 app.get('/', (req, res) => {
-  res.send('Hello, World!')
+  res.send('Hello, World! v1')
 });
 
 app.use(function errorHandler(error, req, res, next) {
